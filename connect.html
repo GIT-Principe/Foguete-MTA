@@ -1,52 +1,260 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <title>AutoConnect MTA:SA</title>
-  <meta http-equiv="refresh" content="3;url=mtasa://181.214.221.251:22003">
-  <style>
-    body {
-      background: #1e1e2f;
-      color: #f5f5f5;
-      font-family: Arial, sans-serif;
-      text-align: center;
-      padding-top: 80px;
-    }
-    h1 {
-      color: #ffd700;
-      font-size: 2.5em;
-      margin-bottom: 20px;
-    }
-    p {
-      font-size: 1.2em;
-      margin-bottom: 30px;
-    }
-    a.button {
-      display: inline-block;
-      padding: 15px 30px;
-      background: #ffd700;
-      color: #1e1e2f;
-      font-weight: bold;
-      text-decoration: none;
-      border-radius: 8px;
-      transition: background 0.3s;
-    }
-    a.button:hover {
-      background: #e5c100;
-    }
-    footer {
-      margin-top: 50px;
-      font-size: 0.9em;
-      color: #aaa;
-    }
-  </style>
+<meta charset="UTF-8">
+<title>Foguete PVP - Painel de Nave</title>
+<meta http-equiv="refresh" content="20;url=mtasa://181.214.221.251:22003">
+<link href="https://fonts.googleapis.com/css2?family=Carter+One&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+    font-family:'Carter One', cursive;
+    background: radial-gradient(circle at center, #001d3d, #000814 80%);
+    overflow:hidden;
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    color:white;
+}
+
+/* CANVAS FUNDO */
+#stars{
+    position:fixed;
+    width:100%;
+    height:100%;
+    z-index:-2;
+}
+
+/* HUD PRINCIPAL */
+.hud{
+    width:600px;
+    padding:40px;
+    border-radius:25px;
+    background:rgba(0,0,0,0.6);
+    backdrop-filter:blur(12px);
+    box-shadow:0 0 25px rgba(39,121,245,0.6);
+    text-align:center;
+    transition:0.2s;
+}
+
+h1{
+    font-size:2.8em;
+    color:#2779F5;
+    text-shadow:0 0 10px rgba(39,121,245,0.7);
+}
+
+/* STATUS */
+.status{
+    margin-top:20px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:10px;
+    font-size:1.1em;
+}
+
+.dot{
+    width:15px;
+    height:15px;
+    border-radius:50%;
+    background:gray;
+    box-shadow:0 0 10px gray;
+}
+
+.lock{
+    font-size:20px;
+}
+
+/* PLAYERS */
+.players{
+    margin-top:20px;
+    font-size:1.2em;
+}
+
+/* BOTÃO */
+.button{
+    margin-top:30px;
+    padding:15px 40px;
+    background:#2779F5;
+    border-radius:15px;
+    text-decoration:none;
+    color:white;
+    display:inline-block;
+    transition:0.3s;
+}
+
+.button:hover{
+    transform:scale(1.05);
+}
+
+/* SOUND */
+.sound{
+    position:fixed;
+    top:20px;
+    right:20px;
+    font-size:22px;
+    cursor:pointer;
+}
+</style>
 </head>
 <body>
-  <h1>?? Conectar ao Servidor MTA:SA</h1>
-  <p>Voc� ser� redirecionado automaticamente em alguns segundos...</p>
-  <a class="button" href="mtasa://181.214.221.251:22003">Conectar Agora</a>
-  <footer>
-    <p>Servidor: 181.214.221.251:22003</p>
-  </footer>
+
+<canvas id="stars"></canvas>
+
+<div class="hud" id="hud">
+    <h1>🚀 Foguete PVP</h1>
+
+    <div class="status">
+        <div class="dot" id="statusDot"></div>
+        <span id="statusText">Carregando...</span>
+        <span class="lock" id="lockIcon">🔒</span>
+    </div>
+
+    <div class="players" id="players">
+        Carregando jogadores...
+    </div>
+
+    <a class="button" href="mtasa://181.214.221.251:22003">
+        CONECTAR
+    </a>
+</div>
+
+<div class="sound" onclick="toggleSound()" id="soundBtn">🔊</div>
+
+<audio id="music" autoplay loop>
+    <source src="musica.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+/* ================= WARP FUNDO ================= */
+
+const canvas = document.getElementById("stars");
+const ctx = canvas.getContext("2d");
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+let stars = [];
+let numStars = 900;
+
+for(let i=0;i<numStars;i++){
+    stars.push({
+        x: Math.random()*canvas.width - canvas.width/2,
+        y: Math.random()*canvas.height - canvas.height/2,
+        z: Math.random()*canvas.width
+    });
+}
+
+function draw(){
+    ctx.fillStyle="rgba(0,0,20,0.5)";
+    ctx.fillRect(0,0,canvas.width,canvas.height);
+
+    let shakeX = (Math.random()-0.5)*1.5;
+    let shakeY = (Math.random()-0.5)*1.5;
+
+    ctx.translate(canvas.width/2+shakeX, canvas.height/2+shakeY);
+
+    stars.forEach(star=>{
+        star.z -= 1.5;
+        if(star.z <= 0) star.z = canvas.width;
+
+        let k = 128.0/star.z;
+        let px = star.x*k;
+        let py = star.y*k;
+        let size = (1-star.z/canvas.width)*2;
+
+        ctx.fillStyle="#ffffff";
+        ctx.fillRect(px,py,size,size);
+    });
+
+    ctx.setTransform(1,0,0,1,0,0);
+    requestAnimationFrame(draw);
+}
+draw();
+
+/* ================= AUDIO REACT ================= */
+
+const audio = document.getElementById("music");
+const hud = document.getElementById("hud");
+
+const ctxAudio = new (window.AudioContext || window.webkitAudioContext)();
+const analyser = ctxAudio.createAnalyser();
+const source = ctxAudio.createMediaElementSource(audio);
+
+source.connect(analyser);
+analyser.connect(ctxAudio.destination);
+analyser.fftSize = 256;
+
+const bufferLength = analyser.frequencyBinCount;
+const dataArray = new Uint8Array(bufferLength);
+
+function audioReactive(){
+    analyser.getByteFrequencyData(dataArray);
+    let bass = dataArray[5]; // frequencia grave
+
+    let scale = 1 + bass/600;
+    hud.style.transform = `scale(${scale})`;
+
+    requestAnimationFrame(audioReactive);
+}
+audioReactive();
+
+/* liberar audio no clique */
+document.body.addEventListener("click",()=>{
+    ctxAudio.resume();
+});
+
+/* ================= STATUS API ================= */
+
+async function atualizarStatus(){
+    try{
+        const response = await fetch("http://181.214.221.251:3000/players");
+        const data = await response.json();
+
+        const dot = document.getElementById("statusDot");
+        const text = document.getElementById("statusText");
+        const lock = document.getElementById("lockIcon");
+        const players = document.getElementById("players");
+
+        if(data.status === "online"){
+            dot.style.background="lime";
+            dot.style.boxShadow="0 0 15px lime";
+            text.innerText="ONLINE";
+        } else if(data.status === "maintenance"){
+            dot.style.background="orange";
+            dot.style.boxShadow="0 0 15px orange";
+            text.innerText="MANUTENÇÃO";
+        } else {
+            dot.style.background="red";
+            dot.style.boxShadow="0 0 15px red";
+            text.innerText="OFFLINE";
+        }
+
+        lock.innerText = data.requirePassword ? "🔒" : "🔓";
+
+        players.innerText =
+            `👥 ${data.players}/${data.maxPlayers} jogadores`;
+
+    }catch(e){
+        document.getElementById("statusText").innerText="OFFLINE";
+        document.getElementById("statusDot").style.background="red";
+    }
+}
+
+atualizarStatus();
+setInterval(atualizarStatus, 10000);
+
+/* ================= SOM ================= */
+
+function toggleSound(){
+    audio.muted = !audio.muted;
+    document.getElementById("soundBtn").innerHTML =
+        audio.muted ? "🔇" : "🔊";
+}
+</script>
+
 </body>
 </html>
