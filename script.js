@@ -97,7 +97,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 async function loadServer(){
     try{
-        const response = await fetch("http://181.214.221.251:3000/players");
+        const const response = await fetch("https://nonascendantly-uncertain-marcellus.ngrok-free.dev/players");
         const data = await response.json();
 
         document.getElementById("serverName").innerText = data.name;
@@ -134,3 +134,4 @@ async function loadServer(){
 
 loadServer();
 setInterval(loadServer, 10000);
+
