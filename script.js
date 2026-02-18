@@ -53,6 +53,7 @@ draw();
 document.addEventListener("DOMContentLoaded", () => {
   const audio = document.getElementById("music");
   const soundBtn = document.getElementById("soundBtn");
+  const overlay = document.getElementById("soundOverlay");
 
   let audioContext;
   let analyser;
@@ -68,16 +69,18 @@ document.addEventListener("DOMContentLoaded", () => {
     analyser.fftSize = 256;
   }
 
-  // Primeiro clique libera o som
-  document.body.addEventListener("click", async () => {
+  // Overlay invisível: libera o som no primeiro toque
+  overlay.addEventListener("click", async () => {
     initAudio();
     if (audioContext.state === "suspended") {
       await audioContext.resume();
     }
-    audio.muted = false; // libera o som
+    audio.muted = false;   // libera o som
+    overlay.remove();      // remove o overlay invisível
+    soundBtn.innerHTML = "🔊"; // botão já começa como ativo
   }, { once: true });
 
-  // Botão de controle
+  // Botão visível: controla pause/play
   soundBtn.addEventListener("click", async () => {
     initAudio();
     if (audioContext.state === "suspended") {
@@ -93,6 +96,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
+
 
 
 
