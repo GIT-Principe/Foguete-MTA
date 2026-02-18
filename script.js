@@ -51,46 +51,47 @@ draw();
 
 /* ================= AUDIO REATIVO ================= */
 document.addEventListener("DOMContentLoaded", () => {
+  const audio = document.getElementById("music");
+  const soundBtn = document.getElementById("soundBtn");
 
-    const audio = document.getElementById("music");
-    const soundBtn = document.getElementById("soundBtn");
+  let audioContext;
+  let analyser;
+  let source;
 
-    let audioContext;
-    let analyser;
-    let source;
+  function initAudio() {
+    if (audioContext) return;
+    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    analyser = audioContext.createAnalyser();
+    source = audioContext.createMediaElementSource(audio);
+    source.connect(analyser);
+    analyser.connect(audioContext.destination);
+    analyser.fftSize = 256;
+  }
 
-    function initAudio() {
-
-        if (audioContext) return;
-
-        audioContext = new (window.AudioContext || window.webkitAudioContext)();
-        analyser = audioContext.createAnalyser();
-        source = audioContext.createMediaElementSource(audio);
-
-        source.connect(analyser);
-        analyser.connect(audioContext.destination);
-
-        analyser.fftSize = 256;
+  // Primeiro clique em qualquer lugar da página libera o som
+  document.body.addEventListener("click", async () => {
+    initAudio();
+    if (audioContext.state === "suspended") {
+      await audioContext.resume();
     }
+    audio.muted = false; // libera o som
+  }, { once: true });
 
-    soundBtn.addEventListener("click", async () => {
-
-        initAudio();
-
-        if (audioContext.state === "suspended") {
-            await audioContext.resume();
-        }
-
-        if (audio.paused) {
-            audio.play();
-            soundBtn.innerHTML = "🔊";
-        } else {
-            audio.pause();
-            soundBtn.innerHTML = "🔇";
-        }
-
-    });
-
+  // Botão de controle
+  soundBtn.addEventListener("click", async () => {
+    initAudio();
+    if (audioContext.state === "suspended") {
+      await audioContext.resume();
+    }
+    if (audio.paused) {
+      audio.play();
+      audio.muted = false;
+      soundBtn.innerHTML = "🔊";
+    } else {
+      audio.pause();
+      soundBtn.innerHTML = "🔇";
+    }
+  });
 });
 
 
