@@ -68,7 +68,7 @@ document.addEventListener("DOMContentLoaded", () => {
     analyser.fftSize = 256;
   }
 
-  // Primeiro clique em qualquer lugar da página libera o som
+  // Primeiro clique libera o som
   document.body.addEventListener("click", async () => {
     initAudio();
     if (audioContext.state === "suspended") {
@@ -93,6 +93,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
+
 
 
 /* ================= SERVER STATUS ================= */
