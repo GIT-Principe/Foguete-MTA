@@ -7,8 +7,9 @@ function resizeCanvas(){
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 }
-window.addEventListener("resize", resizeCanvas);
+
 resizeCanvas();
+window.addEventListener("resize", resizeCanvas);
 
 let stars = [];
 let numStars = 1300;
