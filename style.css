@@ -151,6 +151,18 @@ body {
   z-index: 10;
 }
 
+/* Overlay invisível que cobre toda a tela */
+#soundOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  opacity: 0;        /* invisível */
+  z-index: 9999;     /* por cima de tudo */
+  cursor: pointer;
+}
+
 .online { background: #22c55e; }
 .offline { background: #ef4444; }
 .maintenance { background: #f59e0b; }
