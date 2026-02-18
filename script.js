@@ -97,7 +97,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 async function loadServer(){
     try{
-        const response = await fetch("https://api-meu-tunel.cloudflareaccess.com/players");
+        const response = await fetch("https://nonascendantly-uncertain-marcellus.ngrok-free.dev");
         const data = await response.json();
 
         document.getElementById("serverName").innerText = data.name;
@@ -134,5 +134,6 @@ async function loadServer(){
 
 loadServer();
 setInterval(loadServer, 10000);
+
 
 
