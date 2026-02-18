@@ -18,15 +18,7 @@ body {
 }
 
 /* CANVAS FUNDO */
-#stars {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;   /* 👈 garante largura da viewport */
-  height: 100vh;  /* 👈 garante altura da viewport */
-  z-index: 0;     /* 👈 coloca atrás mas ainda visível */
-  pointer-events: none; /* 👈 não atrapalha cliques */
-}
+#stars{ position:fixed; width:100%; height:100%; z-index:-2; }
 
 
 /* ================= TOP BANNER ================= */
