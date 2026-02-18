@@ -97,7 +97,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 async function loadServer(){
     try{
-        const response = await fetch("https://nonascendantly-uncertain-marcellus.ngrok-free.dev/players");
+        const response = await fetch("https://nonascendantly-uncertain-marcellus.ngrok-free.dev");
         const data = await response.json();
 
         document.getElementById("serverName").innerText = data.name;
