@@ -97,7 +97,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
 async function loadServer(){
     try{
-        const response = await fetch("https://nonascendantly-uncertain-marcellus.ngrok-free.dev/players");
+        const response = await fetch("https://nonascendantly-uncertain-marcellus.ngrok-free.dev/players", {
+  headers: {
+    "ngrok-skip-browser-warning": "true" // opcional, evita a página de aviso
+  }
+});
         const data = await response.json();
 
         document.getElementById("serverName").innerText = data.name;
@@ -134,6 +138,7 @@ async function loadServer(){
 
 loadServer();
 setInterval(loadServer, 10000);
+
 
 
 
