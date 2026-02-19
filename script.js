@@ -106,8 +106,6 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
-
-
 /* ================= SERVER STATUS ================= */
 
 async function loadServer(){
@@ -153,6 +151,7 @@ async function loadServer(){
 
 loadServer();
 setInterval(loadServer, 10000);
+
 
 
 
