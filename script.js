@@ -69,15 +69,20 @@ document.addEventListener("DOMContentLoaded", () => {
     analyser.fftSize = 256;
   }
 
-  // Overlay invisível: libera o som no primeiro toque
+  // Overlay: libera o som no primeiro clique
   overlay.addEventListener("click", async () => {
     initAudio();
     if (audioContext.state === "suspended") {
       await audioContext.resume();
     }
-    audio.muted = false;   // libera o som
-    overlay.remove();      // remove o overlay invisível
-    soundBtn.innerHTML = "🔊"; // botão já começa como ativo
+    try {
+      await audio.play(); // força o play no clique
+    } catch (err) {
+      console.error("Erro ao iniciar áudio:", err);
+    }
+    audio.muted = false;
+    overlay.remove();
+    soundBtn.innerHTML = "🔊";
   }, { once: true });
 
   // Botão visível: controla pause/play
@@ -87,7 +92,11 @@ document.addEventListener("DOMContentLoaded", () => {
       await audioContext.resume();
     }
     if (audio.paused) {
-      audio.play();
+      try {
+        await audio.play();
+      } catch (err) {
+        console.error("Erro ao dar play:", err);
+      }
       audio.muted = false;
       soundBtn.innerHTML = "🔊";
     } else {
@@ -145,6 +154,7 @@ async function loadServer(){
 
 loadServer();
 setInterval(loadServer, 10000);
+
 
 
 
