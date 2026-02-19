@@ -69,7 +69,7 @@ document.addEventListener("DOMContentLoaded", () => {
     analyser.fftSize = 256;
   }
 
-  // Overlay: libera o som no primeiro clique
+  // Primeiro clique no overlay: desbloqueia o áudio
   overlay.addEventListener("click", async () => {
     initAudio();
     if (audioContext.state === "suspended") {
@@ -81,7 +81,7 @@ document.addEventListener("DOMContentLoaded", () => {
       console.error("Erro ao iniciar áudio:", err);
     }
     audio.muted = false;
-    overlay.remove();
+    overlay.remove(); // remove o overlay depois do clique
     soundBtn.innerHTML = "🔊";
   }, { once: true });
 
@@ -105,7 +105,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
-
 
 
 
@@ -154,6 +153,7 @@ async function loadServer(){
 
 loadServer();
 setInterval(loadServer, 10000);
+
 
 
 
